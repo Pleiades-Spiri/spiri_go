@@ -1,0 +1,5 @@
+<launch>
+	
+	<node pkg="spiri_go" type="mavkbteleop" name="mavkbteleopr" required="True" output="screen">
+	</node>
+</launch>
