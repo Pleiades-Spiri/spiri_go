@@ -9,7 +9,6 @@
 #include "mavros_msgs/CommandTOL.h"
 #include "mavros_msgs/OverrideRCIn.h"
 #include "std_msgs/String.h"
-// #include "../include/spiri_go/spiri_go.h"
 #include "spiri_go/spiri_go.h"
 #include <sys/stat.h>
 #include <string>
