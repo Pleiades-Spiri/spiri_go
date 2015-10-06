@@ -1,8 +1,8 @@
 <launch>
 	<!-- First launch mavros -->
 
-	<arg name="fcu_url" default="udp://:15550@" />
-	<arg name="gcs_url" default="" />
+	<arg name="fcu_url" default="udp://127.0.0.1:14550@" />
+	<arg name="gcs_url" default="udp://127.0.0.1:14551@" />
 	<arg name="tgt_system" default="1" />
 	<arg name="tgt_component" default="1" />
 	<arg name="log_output" default="screen" />
@@ -20,7 +20,5 @@
 
 	<!-- Launch SpiriGo -->
 
-	<node >
-		
-	</node>
+	<node pkg="spiri_go" name="spiri_go" type="spiri_go" output="screen"></node>
 </launch>
