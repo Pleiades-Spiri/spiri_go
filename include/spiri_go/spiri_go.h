@@ -47,14 +47,16 @@ private:
     ros::ServiceClient set_mode;
     // tell the copter to take off
     ros::ServiceClient takeoff;
+    // MAVLink service for other needs
+    ros::ServiceClient mavlink_cmd_srv
 
-    ros::NodeHandle nh_;
+    ros::NodeHandle nh;
 
     // save last imu received for forwarding...
     sensor_msgs::Imu lastLocalReceived;
 
     // ROS message callbacks
-    void localSubCb(const geometry_msgs::PoseStamped imudataPtr);
+    void localSubCb(const geometry_msgs::PoseStamped localPtr);
     void stateSubCb(const mavros_msgs::State);
 
     // state variables
@@ -67,11 +69,31 @@ private:
     // location
     geometry_msgs::Pose location;
 
+    // internal control methods
+    geometry_msgs::Quaternion getOrientation();    
+    void go::setGuided();
+    void go::takeOff(float targetAlt);
+
 public:
 
     go();
     ~go();
 
+    // getter functions 
+    bool isArmed();
+    bool isControllable();
+    std:string getMode();    
+    geometry_msgs::Point getLocalPosition();
+    Eigen::Vector3d getAttitude();
+
+
+    // basic Spiri control functions
+    void armAndTakeOff(float targetAlt);
+    void conditionYaw(float targetYaw, float targetYawRate);
+    void setHorizontalVelocity(double u, double v);
+
+    // Yaw commander with MAVLink; angles are in degrees 
+    void conditionYaw(float targetYaw, float targetYawRate);
 
     // main pose-estimation loop
     void Loop();
