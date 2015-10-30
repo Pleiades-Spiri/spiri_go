@@ -82,7 +82,7 @@ public:
     // getter functions 
     bool isArmed();
     bool isControllable();
-    std:string getMode();    
+    std::string getMode();
     geometry_msgs::Point getLocalPosition();
     Eigen::Vector3d getAttitude();
 
@@ -94,6 +94,7 @@ public:
 
     // Yaw commander with MAVLink; angles are in degrees 
     void conditionYaw(float targetYaw, float targetYawRate);
+    void go::setENUVelocity(double eastwardVelocity, double northwardVelocity);
 
     // main pose-estimation loop
     void Loop();

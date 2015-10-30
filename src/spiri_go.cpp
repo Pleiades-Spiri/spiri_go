@@ -65,11 +65,17 @@ go::~go()
 /* ----- callback functions ----- */
 
 
-bool go::isArmed(){return armed}
+bool go::isArmed(){
+	return armed;
+}
 
-bool go::isControllable(){return guided}
+bool go::isControllable(){
+	return guided;
+}
 
-std:string go::getMode(){return mode}
+std::string go::getMode(){
+	return mode;
+}
 
 void go::localSubCb(const geometry_msgs::PoseStamped localPtr)
 {
@@ -111,7 +117,7 @@ Eigen::Vector3d go::getAttitude()
 
     tf::Quaternion orientationQ;
     tf::quaternionMsgToTF(go::getOrientation(), orientationQ);
-    tf::Matrix3x3(orientationQ).getRPY(rpy[0], rpy[1], rpy[2]);
+    tf::Matrix3x3(orientationQ).getRPY(rpy.data()[0], rpy.data()[1], rpy.data()[2]);
 
     return rpy;
 }
@@ -157,7 +163,7 @@ void go::armAndTakeOff(float targetAlt)
 
 void go::conditionYaw(float targetYaw, float targetYawRate)
 {
-    mavros_msgs::CommandLong yawCmd
+    mavros_msgs::CommandLong yawCmd;
 
     yawCmd.request.command = 155;           // MAVLink command ID for MAV_CMD_CONDITION_YAW
     yawCmd.request.confirmation = 0;        // 0 is default for confirmation
