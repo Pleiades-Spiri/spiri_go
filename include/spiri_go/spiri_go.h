@@ -43,12 +43,15 @@ private:
     ros::Publisher rc_out;
 
     // services
+
+    // a service to arm motors
+    ros::ServiceClient arm_vehicle;
     // a service to set the mode
     ros::ServiceClient set_mode;
     // tell the copter to take off
     ros::ServiceClient takeoff;
     // MAVLink service for other needs
-    ros::ServiceClient mavlink_cmd_srv
+    ros::ServiceClient mavlink_cmd_srv;
 
     ros::NodeHandle nh;
 
@@ -71,8 +74,8 @@ private:
 
     // internal control methods
     geometry_msgs::Quaternion getOrientation();    
-    void go::setGuided();
-    void go::takeOff(float targetAlt);
+    void setGuided();
+    void takeOff(float targetAlt);
 
 public:
 
@@ -84,17 +87,14 @@ public:
     bool isControllable();
     std::string getMode();
     geometry_msgs::Point getLocalPosition();
-    Eigen::Vector3d getAttitude();
+//    Eigen::Vector3d getAttitude();
 
 
     // basic Spiri control functions
+    void arm();
     void armAndTakeOff(float targetAlt);
     void conditionYaw(float targetYaw, float targetYawRate);
-    void setHorizontalVelocity(double u, double v);
-
-    // Yaw commander with MAVLink; angles are in degrees 
-    void conditionYaw(float targetYaw, float targetYawRate);
-    void go::setENUVelocity(double eastwardVelocity, double northwardVelocity);
+    void setENUVelocity(double eastwardVelocity, double northwardVelocity);
 
     // main pose-estimation loop
     void Loop();

@@ -7,6 +7,8 @@
 #include "mavros_msgs/State.h"
 #include "mavros_msgs/SetMode.h"
 #include "mavros_msgs/CommandTOL.h"
+#include "mavros_msgs/CommandBool.h"
+#include "mavros_msgs/CommandLong.h"
 #include "mavros_msgs/OverrideRCIn.h"
 #include "std_msgs/String.h"
 #include "spiri_go/spiri_go.h"
@@ -34,6 +36,10 @@ go::go()
     // set the mode (mostly just to guided)
     string set_mode_ = nh.resolveName("/mavros/set_mode");
     set_mode = nh.serviceClient<mavros_msgs::SetMode>(set_mode_);
+
+    // service for arming the copter
+    string arm_vehicle_ = nh.resolveName("/mavros/cmd/arming");
+    arm_vehicle = nh.serviceClient<mavros_msgs::CommandBool>(arm_vehicle_);
 
     // tell the copter to take off autonomously
     string takeoff_ = nh.resolveName("/mavros/cmd/takeoff");
@@ -111,19 +117,35 @@ geometry_msgs::Quaternion go::getOrientation()
     return location.orientation;
 }
 
-Eigen::Vector3d go::getAttitude()
-{
-    Eigen::Vector3d rpy;
-
-    tf::Quaternion orientationQ;
-    tf::quaternionMsgToTF(go::getOrientation(), orientationQ);
-    tf::Matrix3x3(orientationQ).getRPY(rpy.data()[0], rpy.data()[1], rpy.data()[2]);
-
-    return rpy;
-}
+//Eigen::Vector3d go::getAttitude()
+//{
+//    Eigen::Vector3d rpy;
+//
+//    tf::Quaternion orientationQ;
+//    tf::quaternionMsgToTF(go::getOrientation(), orientationQ);
+//    tf::Matrix3x3(orientationQ).getRPY(rpy.data()[0], rpy.data()[1], rpy.data()[2]);
+//
+//    return rpy;
+//}
 
 
 /* ----- end getter functions ----- */
+
+void go::arm()
+{
+	mavros_msgs::CommandBool armCmd;
+
+	armCmd.request.value = true;
+
+    if(arm_vehicle.call(armCmd)){
+        ROS_INFO("Vehicle armed");
+        armed = true;
+    }else{
+        ROS_INFO("Failed to arm");
+    }
+
+
+}
 
 void go::setGuided()
 {
@@ -204,7 +226,8 @@ void go::Loop()
         		go::setGuided();
     	    }
     	}else{
-    	    ROS_INFO("Waiting to arm");
+    		go::arm();
+    	    ROS_INFO("Attempting to arm");
     	}
 
         // get flying with the following
