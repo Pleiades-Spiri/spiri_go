@@ -7,6 +7,8 @@
 #include "mavros_msgs/State.h"
 #include "mavros_msgs/SetMode.h"
 #include "mavros_msgs/CommandTOL.h"
+#include "mavros_msgs/CommandBool.h"
+#include "mavros_msgs/CommandLong.h"
 #include "mavros_msgs/OverrideRCIn.h"
 #include "mavros_msgs/CommandLong.h"
 #include "mavros_msgs/CommandBool.h"
@@ -121,6 +123,7 @@ geometry_msgs::Quaternion SpiriGo::getOrientation()
 	return location.orientation;
 }
 
+
 SpiriAttitude SpiriGo::getAttitude()
 {
 	SpiriAttitude rpy(1, 2, 3);
@@ -132,8 +135,20 @@ SpiriAttitude SpiriGo::getAttitude()
 	return rpy;
 }
 
+//Eigen::Vector3d go::getAttitude()
+//{
+//    Eigen::Vector3d rpy;
+//
+//    tf::Quaternion orientationQ;
+//    tf::quaternionMsgToTF(go::getOrientation(), orientationQ);
+//    tf::Matrix3x3(orientationQ).getRPY(rpy.data()[0], rpy.data()[1], rpy.data()[2]);
+//
+//    return rpy;
+//}
+
 
 /* ----- end getter functions ----- */
+
 
 void SpiriGo::setGuided()
 {
@@ -270,6 +285,11 @@ void SpiriGo::Loop()
         		SpiriGo::setGuided();
     	    }
     	}else{
+<<<<<<< HEAD
+=======
+    		go::arm();
+    	    ROS_INFO("Attempting to arm");
+>>>>>>> c800e528af8bb875e6b626ee134299c14f7e2caa
     	}
 
         // get flying with the following

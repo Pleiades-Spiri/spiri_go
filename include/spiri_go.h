@@ -101,6 +101,12 @@ public:
     void setHorizontalVelocity(double u, double v);
 
     // Yaw commander with MAVLink; angles are in degrees 
+    // Eigen::Vector3d getAttitude();
+
+
+    // basic Spiri control functions
+    void arm();
+    void armAndTakeOff(float targetAlt);
     void conditionYaw(float targetYaw, float targetYawRate);
     void setENUVelocity(double eastwardVelocity, double northwardVelocity);
 
