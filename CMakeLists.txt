@@ -60,6 +60,7 @@ catkin_package(
 add_library(spiri_data_classes src/spiri_data_classes.cpp)
 target_link_libraries(spiri_data_classes ${catkin_LIBRARIES})
 add_library(spiri_go src/spiri_go.cpp)
+add_dependencies(spiri_go spiri_go_generate_messages_cpp)
 target_link_libraries(spiri_go spiri_data_classes ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 #add_library(spiri_boost src/spiri_boost.cpp)
 #target_link_libraries(spiri_boost ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} spiri_go spiri_data_classes)
