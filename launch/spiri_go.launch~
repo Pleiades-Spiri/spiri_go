@@ -1,4 +1,0 @@
-<launch>
-	<node pkg="spiri_go" type="spiri_go" name="spiri_go" output="screen" args="-rc">
-	</node>
-</launch>
