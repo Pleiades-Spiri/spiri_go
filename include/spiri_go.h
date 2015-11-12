@@ -81,7 +81,7 @@ private:
     void takeOff(float targetAlt);
 
     // action servers
-	actionlib::SimpleActionServer<spiri_go::TakeoffAction> takeoff_as;
+    actionlib::SimpleActionServer<spiri_go::TakeoffAction> takeoff_as;
 
 public:
 
@@ -95,18 +95,15 @@ public:
     geometry_msgs::Point getLocalPosition();
     SpiriAttitude getAttitude();
 
-
-    // basic Spiri control functions
-    void armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal);
-    void setHorizontalVelocity(double u, double v);
-
     // Yaw commander with MAVLink; angles are in degrees 
     // Eigen::Vector3d getAttitude();
 
 
     // basic Spiri control functions
+    void armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal);
     void conditionYaw(float targetYaw, float targetYawRate);
     void setENUVelocity(double eastwardVelocity, double northwardVelocity);
+    void setHorizontalVelocity(double u, double v);
 
     // main pose-estimation loop
     void Loop();
