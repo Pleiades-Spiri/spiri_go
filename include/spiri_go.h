@@ -105,8 +105,6 @@ public:
 
 
     // basic Spiri control functions
-    void arm();
-    void armAndTakeOff(float targetAlt);
     void conditionYaw(float targetYaw, float targetYawRate);
     void setENUVelocity(double eastwardVelocity, double northwardVelocity);
 

@@ -20,7 +20,7 @@
 using namespace std;
 
 SpiriGo::SpiriGo():
-				takeoff_as(nh, "spiri_take_off", boost::bind(&SpiriGo::armAndTakeOff, this, _1), false)
+	takeoff_as(nh, "spiri_take_off", boost::bind(&SpiriGo::armAndTakeOff, this, _1), false)
 {
 	ROS_INFO("Constructing Go");
 
