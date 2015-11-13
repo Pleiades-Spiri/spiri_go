@@ -2,7 +2,7 @@
  
  	<!-- Launch parameters for Jetson TK1 serial connection -->
 	<arg name="fcu_url" default="serial:///dev/ttyTHS0:921600" />
-	<arg name="gcs_url" default="udp://127.0.0.1:14551@" />
+	<arg name="gcs_url" default="udp://:14556@" />
 	<arg name="tgt_system" default="1" />
 	<arg name="tgt_component" default="1" />
 	<arg name="log_output" default="screen" />
