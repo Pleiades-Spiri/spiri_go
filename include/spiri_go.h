@@ -80,10 +80,10 @@ private:
     void setGuided();
     void takeOff(float targetAlt);
 
+public:
+
     // action servers
     actionlib::SimpleActionServer<spiri_go::TakeoffAction> takeoff_as;
-
-public:
 
     SpiriGo();
     ~SpiriGo();

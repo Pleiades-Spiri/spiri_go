@@ -322,6 +322,8 @@ int main(int argc, char **argv)
     
     SpiriGo go_thing;
     
+    go_thing.takeoff_as.start();
+
     go_thing.Loop();
     
     return 0;
