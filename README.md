@@ -2,7 +2,7 @@
 
 This is a ROS catkin package of Spiri commands. Requires `mavros` to work.
 
-### Running in the Simulator:
+### Running in the simulator:
 
 To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. To test Spiri ROS package, start the simulator with:
 
@@ -16,14 +16,28 @@ next launch the sitl node for spiri:
 roslaunch spiri_go sitl.launch
 ```
 
-If you are using a mission planner such as apm planner 2, it should connect on udp port 14551.
+If you are using a ground control station such as APM Planner 2, it should connect on udp port 14551.
 
 [ardupilot]: <href="https://github.com/diydrones/ardupilot>
 [ardupilot sitl]: <http://dev.ardupilot.com/wiki/sitl-simulator-software-in-the-loop/>
 
-### Running on the Jetson TK1 Companion Computer
+### Running on the Jetson TK1 companion computer
 
-Connect the Jetson to the Pixhawk via serial connection (detailed instructions, including the pin numbers and schematics, coming soon), and then run
+#### Connect the Jetson to the Pixhawk via serial/UART connection
+
+1. Connect the Jetson's UART ports to an added voltage converter (1.8 V to 5V);
+
+2. Connect the voltage converter to the Pixhawk;
+
+3. Make sure that the serial connection is established by checking `/dev/ttyTHS0`;
+
+4. Validate the Jetson to Flight controller communication using maximum baud rate (921600).
+
+See [this diagram](https://drive.google.com/drive/u/0/folders/0BxXn6LyBxnG6RzRvaW1XeEg5SzQ) for pinout details
+
+#### Running the launch file
+
+Use this command to launch SpiriGo with serial communication (make sure you `bash` session knows where it is): 
 
 ```
 roslaunch spiri_go jetson.launch
