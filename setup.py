@@ -8,5 +8,5 @@ setup(name='SpiriGo',
       author='Skyler Olson',
       author_email='skyler.olson@pleiades.ca',
       url='',
-      packages=["SpiriGo"],
+      packages=["spiripy"],
      )
