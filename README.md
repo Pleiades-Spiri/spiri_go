@@ -33,7 +33,7 @@ If you are using a ground control station such as APM Planner 2, it should conne
 
 4. Validate the Jetson to Flight controller communication using maximum baud rate (921600).
 
-See [this diagram](https://drive.google.com/drive/u/0/folders/0BxXn6LyBxnG6RzRvaW1XeEg5SzQ) for pinout details
+See [this diagram](https://drive.google.com/open?id=0BxXn6LyBxnG6b01mc1N5X2diVlU) for pinout details
 
 #### Running the launch file
 
