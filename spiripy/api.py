@@ -4,6 +4,7 @@ roslib.load_manifest('spiri_go')
 import actionlib
 # Load specific service and action server definitions
 from spiri_go.msg import TakeoffAction, TakeoffGoal
+from spiri_go.msg import LandHereAction, LandHereGoal
 # Import the exceptions defined here
 from spiripy import spiri_except
 
@@ -28,4 +29,11 @@ class SpiriGo:
         goal = TakeoffGoal()
         goal.height = height
         print "Sending takoff command"
+        client.send_goal(goal)
+
+    def landHere(self):
+        client = self.getActionClient('spiri_land_here', LandHereAction)
+        goal = LandHereGoal()
+        goal.height = 0
+        print "Sending land here command"
         client.send_goal(goal)
