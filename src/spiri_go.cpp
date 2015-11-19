@@ -17,10 +17,9 @@
 #include <sys/stat.h>
 #include <string>
 
-using namespace std;
-
 SpiriGo::SpiriGo():
-	takeoff_as(nh, "spiri_take_off", boost::bind(&SpiriGo::armAndTakeOff, this, _1), false)
+	takeoff_as(nh, "spiri_take_off", boost::bind(&SpiriGo::armAndTakeOff, this, _1), false),
+    land_here_as(nh, "spiri_land_here", boost::bind(&SpiriGo::landHere, this, _1), false)
 {
     ROS_INFO("Constructing Go");
     
@@ -78,7 +77,6 @@ SpiriGo::~SpiriGo()
 }
 
 /* ----- callback functions ----- */
-
 
 bool SpiriGo::isArmed(){
     return armed;
@@ -164,20 +162,25 @@ SpiriAttitude SpiriGo::getAttitude()
 
 /* ----- end getter functions ----- */
 
+/* ----- service-specific methods ----- */
 
-void SpiriGo::setGuided()
+void SpiriGo::setMode(const char* targetMode)
 {
     mavros_msgs::SetMode modeCmd;
     
     modeCmd.request.base_mode = 0;
-    modeCmd.request.custom_mode = "GUIDED";
+    modeCmd.request.custom_mode = targetMode;
     
     if(set_mode.call(modeCmd)){
-        ROS_INFO("Set Guided Mode.");
-        //guided = true;
+        ROS_INFO("Set to %s Mode.", targetMode);
     }else{
-        ROS_INFO("Failed to set to Guided Mode. Currently in %s mode", mode.c_str());
+        ROS_INFO("Failed to set to %s Mode. Currently in %s mode", targetMode, mode.c_str());
     }
+}
+
+void SpiriGo::setGuided()
+{
+    setMode("GUIDED");
 }
 
 void SpiriGo::setArmed()
@@ -187,7 +190,6 @@ void SpiriGo::setArmed()
     
     if(arm.call(set_armed)){
         ROS_INFO("Set Armed.");
-        //armed = true;
     }else{
         ROS_INFO("Failed to set to Armed.");
     }
@@ -208,6 +210,36 @@ void SpiriGo::takeOff(float targetAlt = 5)
     }
 }
 
+void SpiriGo::conditionYaw(float targetYaw, float targetYawRate)
+{
+    mavros_msgs::CommandLong yawCmd;
+    
+    yawCmd.request.command = 155;           // MAVLink command ID for MAV_CMD_CONDITION_YAW
+    yawCmd.request.confirmation = 0;        // 0 is default for confirmation
+    yawCmd.request.param1 = targetYaw;      // target heading/yaw in degrees from north (0 to 360)
+    yawCmd.request.param2 = targetYawRate;  // target yaw rate in deg/s
+    yawCmd.request.param3 = 1;              // direction; -1 ccw, 1 cw TODO: make this automatic
+    yawCmd.request.param4 = 0;              // relative offset 1, absolute angle 0
+    
+    if(mavlink_cmd_srv.call(yawCmd)){
+        ROS_INFO("Controlling yaw");
+    }else{
+        ROS_INFO("Condition yaw command rejected");
+    }
+}
+
+void SpiriGo::setENUVelocity(double eastwardVelocity, double northwardVelocity)
+{
+    geometry_msgs::TwistStamped control_msg;
+    
+    control_msg.twist.linear.x = eastwardVelocity;
+    control_msg.twist.linear.y = northwardVelocity;
+    
+    vel.publish(control_msg);
+}
+
+
+/* ----- action-specific methods - these will sleep until finished!!! ----- */
 
 void SpiriGo::armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal)
 {
@@ -254,33 +286,35 @@ void SpiriGo::armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal)
     }
 }
 
-void SpiriGo::conditionYaw(float targetYaw, float targetYawRate)
+// action for Spiri to land in place 
+void SpiriGo::landHere(const spiri_go::LandHereGoalConstPtr& goal)
 {
-    mavros_msgs::CommandLong yawCmd;
-    
-    yawCmd.request.command = 155;           // MAVLink command ID for MAV_CMD_CONDITION_YAW
-    yawCmd.request.confirmation = 0;        // 0 is default for confirmation
-    yawCmd.request.param1 = targetYaw;      // target heading/yaw in degrees from north (0 to 360)
-    yawCmd.request.param2 = targetYawRate;  // target yaw rate in deg/s
-    yawCmd.request.param3 = 1;              // direction; -1 ccw, 1 cw TODO: make this automatic
-    yawCmd.request.param4 = 0;              // relative offset 1, absolute angle 0
-    
-    if(mavlink_cmd_srv.call(yawCmd)){
-        ROS_INFO("Controlling yaw");
-    }else{
-        ROS_INFO("Condition yaw command rejected");
+    if(!land_here_as.isActive()||land_here_as.isPreemptRequested()) return;
+    ros::Rate land_rate(5);
+    bool success = true;    
+
+    ROS_INFO("Attempting to land in place");
+
+    while(mode != "LAND")
+    {
+        setMode("LAND");
+        land_rate.sleep();
     }
+
+    while(location.position.z > 0.05)
+    {
+        // Wait for the robot to think it's 5cm off the ground
+        land_rate.sleep();
+    }
+
+    if(ros::ok()){
+        land_here_as.setSucceeded();
+    } else {
+        land_here_as.setAborted();
+    }    
+
 }
 
-void SpiriGo::setENUVelocity(double eastwardVelocity, double northwardVelocity)
-{
-    geometry_msgs::TwistStamped control_msg;
-    
-    control_msg.twist.linear.x = eastwardVelocity;
-    control_msg.twist.linear.y = northwardVelocity;
-    
-    vel.publish(control_msg);
-}
 
 void SpiriGo::Loop()
 {
@@ -339,6 +373,7 @@ int main(int argc, char **argv)
     
     // start action servers
     go_thing.takeoff_as.start();
+    go_thing.land_here_as.start();
 
     go_thing.Loop();
     

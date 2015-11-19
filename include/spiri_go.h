@@ -24,13 +24,15 @@
 #include <actionlib/server/simple_action_server.h>
 #include <spiri_go/TakeoffAction.h>
 #include <spiri_go/LocalPosition.h>
+#include <spiri_go/LandHereAction.h>
 /*#include "um_pixhawk/filter_state.h"
 #include "std_msgs/String.h"
 #include <dynamic_reconfigure/server.h>
 #include "um_pixhawk/StateestimationParamsConfig.h"
 #include <ar_track_alvar_msgs/AlvarMarkers.h>*/
+#include <string>
 
-
+using namespace std;
 
 class SpiriGo
 {
@@ -77,6 +79,7 @@ private:
 
     // internal control methods
     geometry_msgs::Quaternion getOrientation();
+    void setMode(const char* targetMode);
     void setArmed();
     void setGuided();
     void takeOff(float targetAlt);
@@ -88,6 +91,7 @@ public:
 
     // action servers
     actionlib::SimpleActionServer<spiri_go::TakeoffAction> takeoff_as;
+    actionlib::SimpleActionServer<spiri_go::LandHereAction> land_here_as;
 
     // services, should all be a descriptive name with "Service" at the end
     // Their corresponding call back should have the same name, replacing "Service" with SCB
@@ -110,6 +114,7 @@ public:
 
     // basic Spiri control functions
     void armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal);
+    void landHere(const spiri_go::LandHereGoalConstPtr& goal);
     void conditionYaw(float targetYaw, float targetYawRate);
     void setENUVelocity(double eastwardVelocity, double northwardVelocity);
     void setHorizontalVelocity(double u, double v);
