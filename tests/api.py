@@ -17,13 +17,8 @@ class TestSpiriApi(unittest.TestCase):
     # any comments thta apply to all may go only here
     def test_takeoff_client(self):
         action_name = "spiri_take_off"
-        #try:
-            # Attempt to create the client
+        # Attempt to create the client
         self.spiri_go.getActionClient(action_name, TakeoffAction)
-        #except:
-            # fail on
-            #self.fail("Failed to create " + action_name + " action client.")
-            #return
         # Test that the goal can be created and has the right parameters
         goal = TakeoffGoal()
         self.assertEquals(goal.height, 0)
