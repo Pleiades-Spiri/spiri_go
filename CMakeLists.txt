@@ -65,3 +65,10 @@ add_dependencies(spiri_go spiri_go_generate_messages_cpp)
 target_link_libraries(spiri_go spiri_data_classes ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 #add_library(spiri_boost src/spiri_boost.cpp)
 #target_link_libraries(spiri_boost ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES} spiri_go spiri_data_classes)
+
+# Test
+if(CATKIN_ENABLE_TESTING)
+	find_package(rostest REQUIRED)
+	add_rostest_gtest(spiri_go_test test/sitl.test src/test/spiri_go_test.cpp)
+	target_link_libraries(spiri_go_test ${catkin_LIBRARIES} ${GTEST_LIBRARIES})
+	endif()
