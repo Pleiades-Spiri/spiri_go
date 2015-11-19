@@ -266,8 +266,10 @@ void SpiriGo::armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal)
     
     if(ros::ok()){
         takeoff_as.setSucceeded();
+        ROS_INFO("Takeoff finished");
     } else {
         takeoff_as.setAborted();
+        ROS_INFO("Takeoff aborted");
     }
 }
 
@@ -294,8 +296,10 @@ void SpiriGo::landHere(const spiri_go::LandHereGoalConstPtr& goal)
 
     if(ros::ok()){
         land_here_as.setSucceeded();
+        ROS_INFO("Landing finished")
     } else {
         land_here_as.setAborted();
+        ROS_INFO("Landing aborted")
     }    
 
 }
