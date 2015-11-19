@@ -38,3 +38,4 @@ class SpiriGo:
         goal.height = 0
         print "Sending land here command"
         client.send_goal(goal)
+        client.wait_for_result()
