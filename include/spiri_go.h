@@ -23,6 +23,7 @@
 #include <spiri_data_classes.h>
 #include <actionlib/server/simple_action_server.h>
 #include <spiri_go/TakeoffAction.h>
+#include <spiri_go/LocalPosition.h>
 /*#include "um_pixhawk/filter_state.h"
 #include "std_msgs/String.h"
 #include <dynamic_reconfigure/server.h>
@@ -45,7 +46,7 @@ private:
     ros::Publisher vel;
     ros::Publisher rc_out;
 
-    // services
+    // service clients
     // Arm the copter
     ros::ServiceClient arm;
     // a service to set the mode
@@ -80,10 +81,18 @@ private:
     void setGuided();
     void takeOff(float targetAlt);
 
+    // service callbacks
+    bool getLocalPositionSCB(spiri_go::LocalPosition::Request &req, spiri_go::LocalPosition::Response &rsp);
+
 public:
 
     // action servers
     actionlib::SimpleActionServer<spiri_go::TakeoffAction> takeoff_as;
+
+    // services, should all be a descriptive name with "Service" at the end
+    // Their corresponding call back should have the same name, replacing "Service" with SCB
+    // thus if you have a service named doSomethingService, it's call back should be doSomethingSCB
+    ros::ServiceServer getLocalPositionService;
 
     SpiriGo();
     ~SpiriGo();
