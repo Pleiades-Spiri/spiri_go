@@ -53,6 +53,9 @@ SpiriGo::SpiriGo():
     
     
     // Create the services and actions that other nodes can interact with spiri_go through
+    // A node to get position
+    getLocalPositionService = nh.advertiseService("spiri_local_position", &SpiriGo::getLocalPositionSCB, this);
+
     
     // Some variables
     armed = false;
@@ -107,6 +110,18 @@ void SpiriGo::stateSubCb(const mavros_msgs::State statePtr)
 }
 
 /* ----- end callback functions ----- */
+
+/* --- Spiri Go Service Callbacks --- */
+
+bool SpiriGo::getLocalPositionSCB(spiri_go::LocalPosition::Request &req, spiri_go::LocalPosition::Response &rsp){
+	geometry_msgs::Point pt = getLocalPosition();
+	rsp.x = pt.x;
+	rsp.y = pt.y;
+	rsp.z = pt.z;
+	return true;
+}
+
+/* - End Spiri Go Service Callbacks - */
 
 
 /* ----- getter functions based on callback ----- */
@@ -360,6 +375,7 @@ int main(int argc, char **argv)
     
     SpiriGo go_thing;
     
+    // start action servers
     go_thing.takeoff_as.start();
     go_thing.land_here_as.start();
 
