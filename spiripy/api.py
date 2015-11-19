@@ -20,7 +20,7 @@ class SpiriGo:
         if server_present:
             return client
         else:
-            raise SpiriGoConnectionError
+            raise spiri_except.SpiriGoConnectionError
 
     def armAndTakeoff(self, height=4):
         # Connection to the server
@@ -29,3 +29,4 @@ class SpiriGo:
         goal.height = height
         print "Sending takoff command"
         client.send_goal(goal)
+        client.wait_for_result()
