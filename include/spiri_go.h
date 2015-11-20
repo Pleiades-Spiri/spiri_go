@@ -74,8 +74,12 @@ private:
     bool flying; // has finished taking off
     std::string mode;
 
-    // location
+    // location last returned by mavros
+    geometry_msgs::Pose last_location;
+    // guess of nearest location, itegrated using velocity
     geometry_msgs::Pose location;
+    // target velocity
+    geometry_msgs::Twist velocity;
 
     // internal control methods
     geometry_msgs::Quaternion getOrientation();
@@ -86,6 +90,8 @@ private:
 
     // service callbacks
     bool getLocalPositionSCB(spiri_go::LocalPosition::Request &req, spiri_go::LocalPosition::Response &rsp);
+
+    void updateLocation(ros::Duration dt);
 
 public:
 
@@ -116,7 +122,7 @@ public:
     void armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal);
     void landHere(const spiri_go::LandHereGoalConstPtr& goal);
     void conditionYaw(float targetYaw, float targetYawRate);
-    void setENUVelocity(double eastwardVelocity, double northwardVelocity);
+    void setENUVelocity(/*double eastwardVelocity, double northwardVelocity*/);
     void setHorizontalVelocity(double u, double v);
 
     // main pose-estimation loop
