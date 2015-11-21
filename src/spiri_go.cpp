@@ -55,14 +55,16 @@ land_here_as(nh, "spiri_land_here", boost::bind(&SpiriGo::landHere, this, _1), f
 	// Create the services and actions that other nodes can interact with spiri_go through
 	// A node to get position
 	getLocalPositionService = nh.advertiseService("spiri_local_position", &SpiriGo::getLocalPositionSCB, this);
+	getLastStateService = nh.advertiseService("spiri_state", &SpiriGo::getLastStateSCB, this);
 
 
 	// Some variables
-	armed = false;
-	guided = false;
+	last_state.armed = false;
+	last_state.connected = false;
+	last_state.guided = false;
+	last_state.mode = "STABILIZE";
 	taking_off = false;
 	flying = false;
-	mode = "";
 
 	// location z has to start here so you don't set flying too soon
 	location.position.z = 0;
@@ -84,15 +86,15 @@ SpiriGo::~SpiriGo()
 /* ----- callback functions ----- */
 
 bool SpiriGo::isArmed(){
-	return armed;
+	return last_state.armed;
 }
 
 bool SpiriGo::isControllable(){
-	return guided;
+	return last_state.guided;
 }
 
 std::string SpiriGo::getMode(){
-	return mode;
+	return last_state.mode;
 }
 
 void SpiriGo::localSubCb(const geometry_msgs::PoseStamped localPtr)
@@ -110,9 +112,7 @@ void SpiriGo::localSubCb(const geometry_msgs::PoseStamped localPtr)
 
 void SpiriGo::stateSubCb(const mavros_msgs::State statePtr)
 {
-	armed = statePtr.armed;
-	guided = statePtr.guided;
-	mode = statePtr.mode;
+	last_state = statePtr;
 }
 
 /* ----- end callback functions ----- */
@@ -120,10 +120,17 @@ void SpiriGo::stateSubCb(const mavros_msgs::State statePtr)
 /* --- Spiri Go Service Callbacks --- */
 
 bool SpiriGo::getLocalPositionSCB(spiri_go::LocalPosition::Request &req, spiri_go::LocalPosition::Response &rsp){
-	geometry_msgs::Point pt = getLocalPosition();
-	rsp.x = pt.x;
-	rsp.y = pt.y;
-	rsp.z = pt.z;
+	rsp.x = location.position.x;
+	rsp.y = location.position.y;
+	rsp.z = location.position.z;
+	return true;
+}
+
+bool SpiriGo::getLastStateSCB(spiri_go::LastState::Request &req, spiri_go::LastState::Response &rsp){
+	rsp.armed = last_state.armed;
+	rsp.connected = last_state.connected;
+	rsp.guided = last_state.guided;
+	rsp.mode = last_state.guided;
 	return true;
 }
 
@@ -180,7 +187,7 @@ void SpiriGo::setMode(const char* targetMode)
 	if(set_mode.call(modeCmd)){
 		ROS_INFO("Set to %s Mode.", targetMode);
 	}else{
-		ROS_INFO("Failed to set to %s Mode. Currently in %s mode", targetMode, mode.c_str());
+		ROS_INFO("Failed to set to %s Mode. Currently in %s mode", targetMode, last_state.mode.c_str());
 	}
 }
 
@@ -254,7 +261,7 @@ void SpiriGo::armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal)
 	bool success = true;
 
 	// Arm
-	while(not armed)
+	while(not last_state.armed)
 	{
 		setArmed();
 		takeoff_rate.sleep();
@@ -263,7 +270,7 @@ void SpiriGo::armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal)
 	ROS_INFO("Spiri Armed");
 
 	// set to guided mode
-	while(not guided)
+	while(not last_state.guided)
 	{
 		setGuided();
 		takeoff_rate.sleep();
@@ -303,7 +310,7 @@ void SpiriGo::landHere(const spiri_go::LandHereGoalConstPtr& goal)
 
 	ROS_INFO("Attempting to land in place");
 
-	while(mode != "LAND")
+	while(last_state.mode != "LAND")
 	{
 		setMode("LAND");
 		land_rate.sleep();

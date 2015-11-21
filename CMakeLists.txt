@@ -39,7 +39,7 @@ include_directories(/usr/include/python2.7/)
 ## Things needed to add messages should be here
 ###############################################
 add_service_files(
-  FILES LocalPosition.srv
+  FILES LocalPosition.srv LastState.srv
 )
 add_action_files(
   DIRECTORY action

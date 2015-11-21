@@ -25,6 +25,7 @@
 #include <spiri_go/TakeoffAction.h>
 #include <spiri_go/LocalPosition.h>
 #include <spiri_go/LandHereAction.h>
+#include <spiri_go/LastState.h>
 /*#include "um_pixhawk/filter_state.h"
 #include "std_msgs/String.h"
 #include <dynamic_reconfigure/server.h>
@@ -68,11 +69,9 @@ private:
     void stateSubCb(const mavros_msgs::State);
 
     // state variables
-    bool armed;
-    bool guided;
+    mavros_msgs::State last_state;
     bool taking_off; // has taken off
     bool flying; // has finished taking off
-    std::string mode;
 
     // location last returned by mavros
     geometry_msgs::Pose last_location;
@@ -90,6 +89,7 @@ private:
 
     // service callbacks
     bool getLocalPositionSCB(spiri_go::LocalPosition::Request &req, spiri_go::LocalPosition::Response &rsp);
+    bool getLastStateSCB(spiri_go::LastState::Request &req, spiri_go::LastState::Response &rsp);
 
     void updateLocation(ros::Duration dt);
 
@@ -103,6 +103,7 @@ public:
     // Their corresponding call back should have the same name, replacing "Service" with SCB
     // thus if you have a service named doSomethingService, it's call back should be doSomethingSCB
     ros::ServiceServer getLocalPositionService;
+    ros::ServiceServer getLastStateService;
 
     SpiriGo();
     ~SpiriGo();
