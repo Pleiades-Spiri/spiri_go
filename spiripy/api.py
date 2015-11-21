@@ -1,10 +1,11 @@
 import rospy
 import roslib
+import time
 roslib.load_manifest('spiri_go')
 import actionlib
 # Load specific service and action server definitions
-from spiri_go.msg import TakeoffAction, TakeoffGoal
-from spiri_go.msg import LandHereAction, LandHereGoal
+from spiri_go.msg import *  # imports actions too
+from spiri_go.srv import *
 # Import the exceptions defined here
 from spiripy import spiri_except
 
@@ -21,7 +22,31 @@ class SpiriGo:
         if server_present:
             return client
         else:
-            raise spiri_except.SpiriGoConnectionError
+            raise spiri_except.SpiriGoConnectionError("Could not create action client " + name)
+
+    def getServiceClient(self, name, service):
+        # ensure that the service exists
+        try:
+            rospy.wait_for_service(name, 1)
+        except:
+            raise spiri_except.SpiriGoConnectionError("Could not create service client " + name)
+        return rospy.ServiceProxy(name, service)
+
+    def getState(self):
+        state_sc = self.getServiceClient('spiri_state', LocalPosition)
+        return state_sc()
+
+    # waits for mavros to connect to the flight controller
+    def wait_for_fcu(self, timeout=-1):
+        start_time = rospy.Time()
+        state = self.getState()
+
+        while not state.connected:
+            time.sleep(0.5)
+            duration = rospy.Time() - start_time
+            # check if this should time out
+            if timeout > 0 and duration > timeout:
+                raise spiri_except.SpiriGoConnectionError("Timed out connecting to the FCU")
 
     def armAndTakeoff(self, height=4):
         # Connection to the server
@@ -39,3 +64,7 @@ class SpiriGo:
         print "Sending land here command"
         client.send_goal(goal)
         client.wait_for_result()
+
+    def getLocalPosition(self):
+        localPos_sc = self.getServiceClient('spiri_local_position', LocalPosition)
+        return localPos_sc()
