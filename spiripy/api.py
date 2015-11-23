@@ -60,7 +60,7 @@ class SpiriGo(object):
             This is a ROS action and will be blocking until it completes.
 
         Args:
-            param1 (int): The takeoff height, default is 4 meters.
+            height (int): The takeoff height, default is 4 meters.
 
         Returns:
             True if successful, False otherwise.
@@ -83,7 +83,7 @@ class SpiriGo(object):
 
         Note:
             The copter will go to LAND mode.
-            The method will block until it completes
+            The method will block until it completes.
 
         Args:
 
@@ -101,12 +101,14 @@ class SpiriGo(object):
 
 
 def get_action_client(name, action):
-    """
-    Gets the client and ensures that the server is running
-    name: a string, the server's name (eg. 'spiri_take_off')
-    action: an object, the type of server (eg. TakeoffAction).
+    """Gets the client and ensures that the server is running
 
-    Returns the action client object.
+    Args:    
+        name: a string, the server's name (eg. 'spiri_take_off').
+        action: an object, the type of server (eg. TakeoffAction).
+
+    Returns:
+        The action client object.
     """
     client = actionlib.SimpleActionClient(name, action)
     server_present = client.wait_for_server(rospy.Duration(1))
@@ -117,10 +119,13 @@ def get_action_client(name, action):
 
 
 def get_service_client(name, service):
-    """
-    Ensure that the service exists.
+    """Ensure that the service exists.
 
-    Returns the service client object.
+    Args:
+        service: an object, the name of the service.
+
+    Returns:
+        The service client object.
     """
     try:
         rospy.wait_for_service(name, 1)
