@@ -27,10 +27,10 @@ class SpiriGo(object):
         rospy.init_node('spiri_go_api', anonymous=True)
 
     def wait_for_fcu(self, timeout=-1):
-        """
-        Waits for mavros to connect to the flight controller.
+        """Waits for mavros to connect to the flight controller.
 
-        Throws an error if timeout.
+        Raises:
+            SpiriGoConnectionError: If the connection times out.
         """
         start_time = rospy.Time()
         state = self.get_state()
@@ -63,7 +63,7 @@ class SpiriGo(object):
             height (int): The takeoff height, default is 4 meters.
 
         Returns:
-            True if successful, False otherwise.
+            bool: True if successful, False otherwise.
         """
 
         # Connection to the server
@@ -88,7 +88,7 @@ class SpiriGo(object):
         Args:
 
         Returns:
-            True if successful, False otherwise.
+            bool: True if successful, False otherwise.
         """
         client = get_action_client('spiri_land_here', LandHereAction)
         goal = LandHereGoal()
