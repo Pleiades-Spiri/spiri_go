@@ -33,17 +33,26 @@ class SpiriGo:
         return rospy.ServiceProxy(name, service)
 
     def getState(self):
-        state_sc = self.getServiceClient('spiri_state', LocalPosition)
+        state_sc = self.getServiceClient('spiri_state', LastState)
         return state_sc()
+
+    # waits for the ros interfaces to come online
+    def wait_for_ros(self, timeout=-1):
+        try:
+            rospy.wait_for_service('spiri_state', timeout)
+        except:
+            raise spiri_except.SpiriGoConnectionError("Timed out connecting to ROS")
 
     # waits for mavros to connect to the flight controller
     def wait_for_fcu(self, timeout=-1):
-        start_time = rospy.Time()
+        start_time = time.time()
         state = self.getState()
 
         while not state.connected:
             time.sleep(0.5)
-            duration = rospy.Time() - start_time
+            state = self.getState()
+            duration = time.time() - start_time
+            # print "waiting for fuc: " + str(duration) + "/" + str(timeout)
             # check if this should time out
             if timeout > 0 and duration > timeout:
                 raise spiri_except.SpiriGoConnectionError("Timed out connecting to the FCU")
