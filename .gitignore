@@ -88,3 +88,5 @@ docs/_build/
 
 # PyBuilder
 target/
+build/*
+*.pyc
