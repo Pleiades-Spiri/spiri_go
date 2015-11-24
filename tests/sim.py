@@ -17,9 +17,10 @@ class TestSpiriApiWithSim(unittest.TestCase):
         ardu_path = os.path.join(home, "ardupilot", "ArduCopter")
         #os.chdir(ardu_path)
         self.sim = subprocess.Popen(
-            ["sim_vehicle.sh", "--daemon"],
+            "sim_vehicle.sh --daemon",
             cwd=ardu_path,
             preexec_fn=os.setsid,
+            shell=True,
             #stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE
         )
         # launch ROS
@@ -58,17 +59,17 @@ class TestSpiriApiWithSim(unittest.TestCase):
 
         print 'Test Takeoff'
         to_height = 5
-        self.spiri_go.armAndTakeoff(to_height)
+        self.spiri_go.takeoff(to_height)
         # This blocks until takeoff is over
-        local = self.spiri_go.getLocalPosition()
+        local = self.spiri_go.get_local_position()
         # ensure that you are close enough to the takeoff goal
         self.assertGreater(local.z, to_height*0.96)
         self.assertLess(local.z, to_height*1.04)
 
         # Test Landing
-        self.spiri_go.landHere()
+        self.spiri_go.land()
         # block while waiting to land
-        local = self.spiri_go.getLocalPosition()
+        local = self.spiri_go.get_local_position()
         # a assume it will be at least this low after it's landed
         self.assertLess(local.z, 0.1)
 
