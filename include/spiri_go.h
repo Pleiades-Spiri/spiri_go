@@ -82,9 +82,9 @@ private:
 
     // internal control methods
     geometry_msgs::Quaternion getOrientation();
-    void setMode(const char* targetMode);
-    void setArmed();
-    void setGuided();
+    bool setMode(const char* targetMode);
+    bool setArmed();
+    bool setGuided();
     void takeOff(float targetAlt);
 
     // service callbacks

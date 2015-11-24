@@ -113,6 +113,7 @@ void SpiriGo::localSubCb(const geometry_msgs::PoseStamped localPtr)
 void SpiriGo::stateSubCb(const mavros_msgs::State statePtr)
 {
 	last_state = statePtr;
+	ROS_INFO("mode: %s", last_state.mode.c_str());
 }
 
 /* ----- end callback functions ----- */
@@ -177,7 +178,7 @@ SpiriAttitude SpiriGo::getAttitude()
 
 /* ----- service-specific methods ----- */
 
-void SpiriGo::setMode(const char* targetMode)
+bool SpiriGo::setMode(const char* targetMode)
 {
 	mavros_msgs::SetMode modeCmd;
 
@@ -186,25 +187,29 @@ void SpiriGo::setMode(const char* targetMode)
 
 	if(set_mode.call(modeCmd)){
 		ROS_INFO("Set to %s Mode.", targetMode);
+		return modeCmd.response.success;
 	}else{
 		ROS_INFO("Failed to set to %s Mode. Currently in %s mode", targetMode, last_state.mode.c_str());
+		return false;
 	}
 }
 
-void SpiriGo::setGuided()
+bool SpiriGo::setGuided()
 {
-	setMode("GUIDED");
+	return setMode("GUIDED");
 }
 
-void SpiriGo::setArmed()
+bool SpiriGo::setArmed()
 {
 	mavros_msgs::CommandBool set_armed;
 	set_armed.request.value = true;
 
 	if(arm.call(set_armed)){
 		ROS_INFO("Set Armed.");
+		return set_armed.response.success;
 	}else{
 		ROS_INFO("Failed to set to Armed.");
+		return false;
 	}
 }
 
@@ -260,23 +265,30 @@ void SpiriGo::armAndTakeOff(const spiri_go::TakeoffGoalConstPtr& goal)
 	ros::Rate takeoff_rate(5);
 	bool success = true;
 
-	// Arm
+	// set to guided mode
+	//bool guided_ = setGuided();
+	bool armed_ = setArmed();
 	while(not last_state.armed)
 	{
-		setArmed();
-		takeoff_rate.sleep();
-	}
-
-	ROS_INFO("Spiri Armed");
-
-	// set to guided mode
-	while(not last_state.guided)
-	{
-		setGuided();
+		if(not last_state.guided){
+			setGuided();
+		}else{
+			bool armed_ = setArmed();
+		}
 		takeoff_rate.sleep();
 	}
 
 	ROS_INFO("Spiri Guided.");
+
+	// Arm
+//	bool armed_ = setArmed();
+//	while(not last_state.armed)
+//	{
+//		takeoff_rate.sleep();
+//		armed_ = setArmed();
+//	}
+//
+//	ROS_INFO("Spiri Armed");
 
 	// take off
 	taking_off = false;
