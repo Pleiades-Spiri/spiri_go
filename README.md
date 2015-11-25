@@ -21,22 +21,6 @@ If you are using a ground control station such as APM Planner 2, it should conne
 [ardupilot]: <href="https://github.com/diydrones/ardupilot>
 [ardupilot sitl]: <http://dev.ardupilot.com/wiki/sitl-simulator-software-in-the-loop/>
 
-### Using the Python API
-
-Python scripts can use the spiripy api by importing:
-
-```
-from spiripy import api
-```
-
-and creating a SpiriGo object:
-
-```
-spiri_go = api.SpiriGo()
-```
-
-These can be launched as normal python scripts, but the spiri_go, and mavros packages must be running in the background for it to control a quadcopter.
-
 ### Running on the Jetson TK1 companion computer
 
 #### Connect the Jetson to the Pixhawk via serial/UART connection
@@ -87,4 +71,35 @@ spiri = api.SpiriGo()
 
 `spiri` will then be a SpiriGo instance with the following methods:
 
-+ `armAndTakeoff(height)`
++ `wait_for_ros([timeout])`
++ `wait_for_fcu([timeout])`
++ `get_state()`
++ `get_local_position()`
++ `takeoff([height])`
++ `land()`
+
+
+Your script can be launched as a normal python scripts, but the spiri_go, and mavros packages must be running in the background for it to control a quadcopter.
+
+#### Generating Documentation
+
+TODO
+
+
+### Develpers
+
+#### Running Tests
+
+To test the python api, run:
+
+```
+python tests/api.py
+```
+
+to test those parts that require the simulator running, use:
+
+```
+python tests/sim.py
+```
+
+Any new methods that are made MUST have a corresponding unit test, and if possible should have a corresponding unit test with the simulator. It is good practice to write the test before implementing the method
