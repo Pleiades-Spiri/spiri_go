@@ -66,3 +66,25 @@ If you see
 ```
 
 It means you've succeeded. Note the baud rate is set to `921600` because that's the highest allowed by `mavros`. We're looking into increasing this to `1500000` maybe if we really need to.
+
+#### Python API
+
+There is a python api to control spiri, using the services and actions provided by the ros library.
+To install this on your system, run:
+
+```
+python setup.py install
+```
+
+from the root of this repository.
+
+To use this in a python script, include the following line:
+
+```
+from spiripy import api
+spiri = api.SpiriGo()
+```
+
+`spiri` will then be a SpiriGo instance with the following methods:
+
++ `armAndTakeoff(height)`
