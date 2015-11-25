@@ -4,7 +4,7 @@ This is a ROS catkin package of Spiri commands. Requires `mavros` to work.
 
 ### Running in the simulator:
 
-To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. To test Spiri ROS package, start the simulator with:
+To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. There is also a script, `initalization/apm_sim` that will do this set-up automatically. To test Spiri ROS package, start the simulator with:
 
 ```
 sim_vehicle.sh --map --console --aircraft test
@@ -20,6 +20,22 @@ If you are using a ground control station such as APM Planner 2, it should conne
 
 [ardupilot]: <href="https://github.com/diydrones/ardupilot>
 [ardupilot sitl]: <http://dev.ardupilot.com/wiki/sitl-simulator-software-in-the-loop/>
+
+### Using the Python API
+
+Python scripts can use the spiripy api by importing:
+
+```
+from spiripy import api
+```
+
+and creating a SpiriGo object:
+
+```
+spiri_go = api.SpiriGo()
+```
+
+These can be launched as normal python scripts, but the spiri_go, and mavros packages must be running in the background for it to control a quadcopter.
 
 ### Running on the Jetson TK1 companion computer
 
