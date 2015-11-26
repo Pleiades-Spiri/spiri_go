@@ -7,13 +7,11 @@
 # companion computer on a flying ArduPilot quadcopter. DO NOT run this on
 # any other systems as it is meant specifically for the Jetson.
 #
-# By default, this script will install the SpiriGo workspace in the current user's
-# home directory and all of its dependencies (including libraries and database
-# servers) at the system level. 
+# By default, this script will install the SpiriGo workspace in the current 
+# user's home directory and all of its dependencies at the system level. 
 #
 # This script is meant to run from a fresh Grinch kernel. We have a Grinch 
 # provision script but that one requires a reboot.
-#
 #
 ###############################################################################
 set -e
@@ -82,7 +80,6 @@ sudo apt-get update
 ###############################################################################
 # Install CUDA 6.5
 ###############################################################################
-
 # source: JetsonHacks
 if (($(dpkg -l | grep cuda-toolkit-6-5 | wc -l) == 0))
 then
