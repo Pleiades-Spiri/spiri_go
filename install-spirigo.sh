@@ -39,8 +39,6 @@ if [[ $EUID -ne 0 ]]; then
     exit 1
 fi
 
-# seriously! these checks are here for a reason. the packages from the
-# reddit ppa aren't built for anything but trusty (14.04) right now, so
 # if you try and use this install script on another release you're gonna
 # have a bad time.
 source /etc/lsb-release
