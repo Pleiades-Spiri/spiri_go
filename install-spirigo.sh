@@ -75,7 +75,7 @@ export CUDA_VERSION="cuda-repo-l4t-r21.3-6-5-prod_6.5-42_armhf"
 sudo apt-mark hold xserver-xorg-core
 
 # run an aptitude update 
-sudo apt-get install $APTITUDE_OPTIONS dpkg git
+sudo apt-get install $APTITUDE_OPTIONS dpkg git bash-completion command-not-found
 sudo apt-add-repository universe
 sudo apt-add-repository multiverse
 sudo apt-add-repository restricted
@@ -169,11 +169,8 @@ wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo 
 sudo apt-get update
 sudo apt-get install $APTITUDE_OPTIONS \
                     ros-indigo-ros-base \
-                    ros-indigo-usb-cam \
                     ros-indigo-mavlink \
                     ros-indigo-mavros \
-                    ros-indigo-cv-bridge \
-                    ros-indigo-image-proc \
                     ros-indigo-tf
 
 # Setup rosdep which makes life a lot easier by auto-installing dependencies wherever possible.
