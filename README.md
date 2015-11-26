@@ -4,7 +4,7 @@ This is a ROS catkin package of Spiri commands. Requires `mavros` to work.
 
 ### Running in the simulator:
 
-To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. To test Spiri ROS package, start the simulator with:
+To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. There is also a script, `initalization/apm_sim` that will do this set-up automatically. To test Spiri ROS package, start the simulator with:
 
 ```
 sim_vehicle.sh --map --console --aircraft test
@@ -71,4 +71,35 @@ spiri = api.SpiriGo()
 
 `spiri` will then be a SpiriGo instance with the following methods:
 
-+ `armAndTakeoff(height)`
++ `wait_for_ros([timeout])`
++ `wait_for_fcu([timeout])`
++ `get_state()`
++ `get_local_position()`
++ `takeoff([height])`
++ `land()`
+
+
+Your script can be launched as a normal python scripts, but the spiri_go, and mavros packages must be running in the background for it to control a quadcopter.
+
+#### Generating Documentation
+
+TODO
+
+
+### Develpers
+
+#### Running Tests
+
+To test the python api, run:
+
+```
+python tests/api.py
+```
+
+to test those parts that require the simulator running, use:
+
+```
+python tests/sim.py
+```
+
+Any new methods that are made MUST have a corresponding unit test, and if possible should have a corresponding unit test with the simulator. It is good practice to write the test before implementing the method
