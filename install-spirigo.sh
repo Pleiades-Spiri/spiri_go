@@ -34,6 +34,11 @@ if [ "$DISTRIB_ID" != "Ubuntu" -o "$DISTRIB_RELEASE" != "14.04" ]; then
     exit 1
 fi
 
+if (($(uname -r | grep grinch | wc -l) != 0)); then
+    echo "ERROR: The Grinch kernel is not installed on your system."
+    exit 1
+fi
+
 ###############################################################################
 # Configuration
 ###############################################################################
