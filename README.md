@@ -50,7 +50,7 @@ $ ./apm_sim
 
 See [this diagram](https://drive.google.com/open?id=0BxXn6LyBxnG6b01mc1N5X2diVlU) for pinout details
 
-##### Running the launch file
+#### Running the launch file
 
 Use this command to launch SpiriGo with serial communication (make sure you `bash` session knows where it is): 
 
