@@ -2,6 +2,24 @@
 
 This is a ROS catkin package of Spiri commands. Requires `mavros` to work.
 
+### Installation on the Jetson TK1
+
+1. Get the [latest version of the install script](https://github.com/Pleiades-Spiri/spiri_go/blob/master/install-spirigo.sh).
+2. Run the script without root.
+
+```bash
+$ wget https://raw.githubusercontent.com/Pleiades-Spiri/spiri_go/master/install-spirigo.sh
+$ chmod +x install-spirigo.sh
+$ less install-spirigo.sh
+```
+
+This will give you a chance to read the script. When you're ready, run the script.
+
+```bash
+$ ./install-spirigo.sh
+```
+It will prompt you for your password right away even though it's without `sudo`. 
+
 ### Running in the simulator:
 
 To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. There is also a script, `initalization/apm_sim` that will do this set-up automatically. To test Spiri ROS package, start the simulator with:
