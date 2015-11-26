@@ -17,25 +17,12 @@
 set -e
 
 ###############################################################################
-# Configuration
-###############################################################################
-# which user to install the code for; defaults to the user invoking this script
-SPIRI_USER=${SPIRI_USER:-$SUDO_USER}
-
-# the root directory to base the install in. must exist already
-SPIRI_HOME=${SPIRI_HOME:-/home/$SPIRI_USER}
-
-# check that the data directory exists, if not create it
-if !([ -d $SPIRI_HOME/temp ]); then
-    mkdir -p $SPIRI_HOME/temp
-fi
-DATA=${DATA:-$SPIRI_HOME/temp}
-
-###############################################################################
 # Sanity Checks
 ###############################################################################
-if [[ $EUID -ne 0 ]]; then
-    echo "ERROR: Must be run with root privileges."
+# the script will require sudo for some actions but cannot be invoked via 
+# sudo mainly because ROS dependencies are finicky with permission
+if [[ $EUID -eq 0 ]]; then
+    echo "ERROR: Must be run WITHOUT sudo."
     exit 1
 fi
 
@@ -46,6 +33,21 @@ if [ "$DISTRIB_ID" != "Ubuntu" -o "$DISTRIB_RELEASE" != "14.04" ]; then
     echo "ERROR: Only Ubuntu 14.04 is supported."
     exit 1
 fi
+
+###############################################################################
+# Configuration
+###############################################################################
+# which user to install the code for; defaults to the user invoking this script
+SPIRI_USER=${SPIRI_USER:-$USER}
+
+# the root directory to base the install in. must exist already
+SPIRI_HOME=${SPIRI_HOME:-/home/$SPIRI_USER}
+
+# check that the data directory exists, if not create it
+if !([ -d $SPIRI_HOME/temp ]); then
+    mkdir -p $SPIRI_HOME/temp
+fi
+DATA=${DATA:-$SPIRI_HOME/temp}
 
 ###############################################################################
 # Initial Configuration
@@ -65,15 +67,14 @@ export GIT_SSL_NO_VERIFY=1
 export CUDA_VERSION="cuda-repo-l4t-r21.3-6-5-prod_6.5-42_armhf"
 
 # do a hold here to prevent OpenGL from being overwritten
-apt-mark hold xserver-xorg-core
+sudo apt-mark hold xserver-xorg-core
 
 # run an aptitude update 
-apt-get install $APTITUDE_OPTIONS dpkg git
-apt-add-repository universe
-apt-add-repository multiverse
-apt-add-repository restricted
+sudo apt-get install $APTITUDE_OPTIONS dpkg git
+sudo apt-add-repository universe
+sudo apt-add-repository multiverse
+sudo apt-add-repository restricted
 sudo apt-get update
-
 
 ###############################################################################
 # Install CUDA 6.5
@@ -102,8 +103,8 @@ then
 
     dpkg -i $DATA/$CUDA_VERSION".deb"
     # Download & install the actual CUDA Toolkit including the OpenGL toolkit from NVIDIA. 
-    apt-get update
-    apt-get install $APTITUDE_OPTIONS cuda-toolkit-6-5
+    sudo apt-get update
+    sudo apt-get install $APTITUDE_OPTIONS cuda-toolkit-6-5
 
     # Add yourself to the "video" group to allow access to the GPU
     sudo usermod -a -G video $SPIRI_USER
@@ -125,26 +126,26 @@ fi
 
 # do the official OpenCV4Tegra installation
 wget http://developer.download.nvidia.com/embedded/OpenCV/L4T_21.1/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb -P $DATA
-dpkg -i $DATA/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb
-apt-get update
-apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
+sudo dpkg -i $DATA/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb
+sudo apt-get update
+sudo apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
 # then UNINSTALL OpenCV4Tegra to fix the debian files
-apt-get remove --force-yes libopencv4tegra libopencv4tegra-dev libopencv4tegra-python 
-dpkg --purge libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
+sudo apt-get remove --force-yes libopencv4tegra libopencv4tegra-dev libopencv4tegra-python 
+sudo dpkg --purge libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
 # source the prepared debian files to reinstall OpenCV4Tegra properly
-dpkg -i $DATA/libopencv4tegra_2.4.10.1_armhf_mod.deb 
-dpkg -i $DATA/libopencv4tegra-dev_2.4.10.1_armhf_mod.deb 
-dpkg -i $DATA/libopencv4tegra-python_2.4.10.1_armhf_mod.deb
+sudo dpkg -i $DATA/libopencv4tegra_2.4.10.1_armhf_mod.deb 
+sudo dpkg -i $DATA/libopencv4tegra-dev_2.4.10.1_armhf_mod.deb 
+sudo dpkg -i $DATA/libopencv4tegra-python_2.4.10.1_armhf_mod.deb
 
 # install OpenCV4Tegra again
 echo "Installing OpenCV4Tegra"
-apt-get update
-apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
+sudo apt-get update
+sudo apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
 echo "To avoid future conflicts, tell the system to retain the present installation of the OpenCV4Tegra library"
-apt-mark hold libopencv4tegra libopencv4tegra-dev libopencv4tegra-python libopencv4tegra-repo
+sudo apt-mark hold libopencv4tegra libopencv4tegra-dev libopencv4tegra-python libopencv4tegra-repo
 printf ${GREEN}"OpenCV4Tegra installed and debian files fixed \n"${NO_COLOR}
 
 ###############################################################################
@@ -182,25 +183,25 @@ source /opt/ros/indigo/setup.bash
 ###############################################################################
 # Install SpiriGo repository
 ###############################################################################
-WORKSPACE=$SPIRI_HOME/spiri_ws
+SPIRI_WORKSPACE=$SPIRI_HOME/spiri_ws
 
 # Make workspace directory then "compile" to initialize the ROS workspace
-mkdir -p $WORKSPACE/src
-cd $WORKSPACE/src
+mkdir -p $SPIRI_WORKSPACE/src
+cd $SPIRI_WORKSPACE/src
 catkin_init_workspace
-cd $WORKSPACE
+cd $SPIRI_WORKSPACE
 catkin_make 
 
 # Download spiri_go package into source 
-cd $WORKSPACE/src
+cd $SPIRI_WORKSPACE/src
 git clone https://github.com/Pleiades-Spiri/spiri_go.git
 
 # Now compile the one package we have
-cd $WORKSPACE
+cd $SPIRI_WORKSPACE
 catkin_make
 
 # Gotta source the package paths for roslaunch/rosrun to find them
-sh -c "echo 'source $WORKSPACE/devel/setup.bash' >> $SPIRI_HOME/.bashrc"
-source $WORKSPACE/devel/setup.bash
+sh -c "echo 'source $SPIRI_WORKSPACE/devel/setup.bash' >> $SPIRI_HOME/.bashrc"
+source $SPIRI_WORKSPACE/devel/setup.bash
 
 
