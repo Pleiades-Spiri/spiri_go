@@ -20,9 +20,21 @@ $ ./install-spirigo.sh
 ```
 It will prompt you for your password right away even though it's without `sudo`. 
 
+### Installation on Ubuntu desktop (for simulator)
+
+To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. There is also a script, `initalization/apm_sim` that will do this set-up automatically. 
+
+This script is meant to be ran from a fresh Ubuntu 14.04 installation. Please read if carefully if you plan on installing on a system with ROS already installed.
+
+```bash
+$ wget https://raw.githubusercontent.com/Pleiades-Spiri/spiri_go/master/initialize/apm_sim
+$ chmod +x apm_sim
+$ ./apm_sim
+```
+
 ### Running in the simulator:
 
-To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. Follow the directions at [Ardupilot SITL][] to set up the simulator. There is also a script, `initalization/apm_sim` that will do this set-up automatically. To test Spiri ROS package, start the simulator with:
+To test Spiri ROS package, start the simulator with:
 
 ```
 sim_vehicle.sh --map --console --aircraft test
