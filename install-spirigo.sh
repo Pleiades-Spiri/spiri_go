@@ -14,7 +14,7 @@
 # provision script but that one requires a reboot.
 #
 ###############################################################################
-# set -e
+set -e
 
 ###############################################################################
 # Sanity Checks
@@ -206,4 +206,23 @@ catkin_make
 sh -c "echo 'source $SPIRI_WORKSPACE/devel/setup.bash' >> $SPIRI_HOME/.bashrc"
 source $SPIRI_WORKSPACE/devel/setup.bash
 
+###############################################################################
+# All done!
+###############################################################################
+cd $SPIRI_HOME
 
+cat <<CONCLUSION
+
+Congratulations! SpiriGo is now installed on your Jetson TK1
+
+Please refer to the readme online for more instructions:
+    
+    https://github.com/Pleiades-Spiri/spiri_go
+
+If everything compiled fine, you should be able to run
+
+    roslaunch spiri_go jetson.launch
+
+And connect to your Pixhawk as long as your serial connection is set up 
+properly.
+CONCLUSION
