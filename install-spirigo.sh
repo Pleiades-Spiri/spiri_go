@@ -109,7 +109,7 @@ then
         wget http://developer.download.nvidia.com/embedded/L4T/r21_Release_v3.0/$CUDA_VERSION".deb" -P $DATA
     fi
 
-    dpkg -i $DATA/$CUDA_VERSION".deb"
+    sudo dpkg -i $DATA/$CUDA_VERSION".deb"
     # Download & install the actual CUDA Toolkit including the OpenGL toolkit from NVIDIA. 
     sudo apt-get update
     sudo apt-get install $APTITUDE_OPTIONS cuda-toolkit-6-5
