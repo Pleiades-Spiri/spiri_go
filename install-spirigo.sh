@@ -136,7 +136,7 @@ fi
 # https://devtalk.nvidia.com/default/topic/835118/embedded-systems/incorrect-configuration-in-opencv4tegra-debian-packages-and-solution
 
 # do the official OpenCV4Tegra installation
-wget http://developer.download.nvidia.com/embedded/OpenCV/L4T_21.1/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb -P $DATA
+wget http://developer.download.nvidia.com/embedded/OpenCV/L4T_21.2/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb -P $DATA
 sudo dpkg -i $DATA/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb
 sudo apt-get update
 sudo apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
