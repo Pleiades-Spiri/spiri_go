@@ -76,9 +76,12 @@ sudo apt-mark hold xserver-xorg-core
 
 # run an aptitude update 
 sudo apt-get install $APTITUDE_OPTIONS dpkg git bash-completion command-not-found
-sudo apt-add-repository universe
-sudo apt-add-repository multiverse
-sudo apt-add-repository restricted
+#sudo apt-add-repository universe
+sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) universe"
+#sudo apt-add-repository multiverse
+sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) multiverse"
+#sudo apt-add-repository restricted
+sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) restricted"
 sudo apt-get update
 
 ###############################################################################
