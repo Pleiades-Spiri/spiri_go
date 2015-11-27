@@ -128,13 +128,13 @@ TODO
 To test the python API, run:
 
 ```
-python tests/api.py
+python test/api.py
 ```
 
 To test those parts that require the simulator running, use:
 
 ```
-python tests/sim.py
+python test/sim.py
 ```
 
 Any new methods that are made MUST have a corresponding unit test, and if possible should have a corresponding unit test with the simulator. It is good practice to write the test before implementing the method.
