@@ -145,6 +145,12 @@ sudo apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libop
 sudo apt-get remove $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python 
 sudo dpkg --purge libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
+# download modded debian files from GitHub 
+# TODO: script this step
+wget https://raw.githubusercontent.com/Pleiades-Spiri/opencv4tegra-mod-deb-files/master/libopencv4tegra_2.4.10.1_armhf_mod.deb -P $DATA
+wget https://raw.githubusercontent.com/Pleiades-Spiri/opencv4tegra-mod-deb-files/master/libopencv4tegra-dev_2.4.10.1_armhf_mod.deb -P $DATA
+wget https://raw.githubusercontent.com/Pleiades-Spiri/opencv4tegra-mod-deb-files/master/libopencv4tegra-python_2.4.10.1_armhf_mod.deb -P $DATA
+
 # source the prepared debian files to reinstall OpenCV4Tegra properly
 sudo dpkg -i $DATA/libopencv4tegra_2.4.10.1_armhf_mod.deb 
 sudo dpkg -i $DATA/libopencv4tegra-dev_2.4.10.1_armhf_mod.deb 
