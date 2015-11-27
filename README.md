@@ -10,15 +10,15 @@ This is a ROS catkin package of Spiri commands. Requires `mavros` to work.
 2. Run the script without root.
 
 ```bash
-$ wget https://raw.githubusercontent.com/Pleiades-Spiri/spiri_go/master/install-spirigo.sh
-$ chmod +x install-spirigo.sh
-$ less install-spirigo.sh
+wget https://raw.githubusercontent.com/Pleiades-Spiri/spiri_go/master/install-spirigo.sh
+chmod +x install-spirigo.sh
+less install-spirigo.sh
 ```
 
 This will give you a chance to read the script. When you're ready, run the script.
 
 ```bash
-$ ./install-spirigo.sh
+./install-spirigo.sh
 ```
 It will prompt you for your password right away even though it's without `sudo`. 
 
@@ -29,9 +29,9 @@ To run the simulator, clone a copy of the ardupilot project from [Ardupilot][]. 
 This script is meant to be ran from a fresh Ubuntu 14.04 installation. Please read if carefully if you plan on installing on a system with ROS already installed.
 
 ```bash
-$ wget https://raw.githubusercontent.com/Pleiades-Spiri/spiri_go/master/initialize/apm_sim
-$ chmod +x apm_sim
-$ ./apm_sim
+wget https://raw.githubusercontent.com/Pleiades-Spiri/spiri_go/master/initialize/apm_sim
+chmod +x apm_sim
+./apm_sim
 ```
 
 ## Usage 
