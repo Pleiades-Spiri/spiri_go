@@ -40,7 +40,7 @@ if (($(uname -r | grep grinch | wc -l) == 0)); then
 fi
 
 ###############################################################################
-# Configuration
+# Variable Declaration
 ###############################################################################
 # which user to install the code for; defaults to the user invoking this script
 SPIRI_USER=${SPIRI_USER:-$USER}
@@ -74,12 +74,18 @@ export CUDA_VERSION="cuda-repo-l4t-r21.3-6-5-prod_6.5-42_armhf"
 # do a hold here to prevent OpenGL from being overwritten
 sudo apt-mark hold xserver-xorg-core
 
-# run an aptitude update 
-sudo apt-get install $APTITUDE_OPTIONS dpkg git bash-completion command-not-found
+# add some ppas
 sudo apt-add-repository universe
 sudo apt-add-repository multiverse
 sudo apt-add-repository restricted
+
+# comment out EOL universe packages 
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+sudo awk '/archive/ {$0="#"$0}1' /etc/apt/sources.list
+
+# run apt update and get essential tools for the rest of the script
 sudo apt-get update
+sudo apt-get install $APTITUDE_OPTIONS dpkg git bash-completion command-not-found
 
 ###############################################################################
 # Install CUDA 6.5
