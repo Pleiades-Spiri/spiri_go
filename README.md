@@ -1,6 +1,6 @@
 # SpiriGo
 
-SpiriGo is a ROS package for performing autonomous flights with a MAVLink UAV.
+SpiriGo is a ROS package for performing autonomous flights with a MAVLink UAV. It is built upon [`mavros`](http://wiki.ros.org/mavros) and [ArduPilot](https://github.com/diydrones/ardupilot).
 
 ## Installation and Usage
 
@@ -9,17 +9,13 @@ SpiriGo is a ROS package for performing autonomous flights with a MAVLink UAV.
 SpiriGo is primarily being developed for use on the [Jetson TK1](http://www.nvidia.ca/object/jetson-tk1-embedded-dev-kit.html) for now. We have thus created an [automated install script](https://github.com/Pleiades-Spiri/spiri_go/blob/master/install-spirigo.sh) that will install necessary components on the Jetson for autonomous UAV development. This includes:
 
 - [ROS Indigo](http://wiki.ros.org/indigo), 
-
 - [CUDA 6.5](https://developer.nvidia.com/cuda-toolkit-65), and
+- [OpenCV4Tegra](http://elinux.org/Jetson/Computer_Vision_Performance#Hardware_Acceleration_of_OpenCV).
 
-- [OpenCV4Tegra](http://elinux.org/Jetson/Computer_Vision_Performance#Hardware_Acceleration_of_OpenCV), a OpenCV fork available from NVIDIA which includes ARM NEON SIMD optimizations, multi-core CPU optimizations, and some GLSL GPU optimizations.
-
-Although it is [generally recognized that ROS is incompatible with Opencv4Tegra](http://wiki.ros.org/NvidiaJetsonTK1), our install script correctly works around the issue via [methods outlined in this post](https://devtalk.nvidia.com/default/topic/835118/embedded-systems/incorrect-configuration-in-opencv4tegra-debian-packages-and-solution).
+Although it is [generally recognized that ROS is incompatible with OpenCV4Tegra](http://wiki.ros.org/NvidiaJetsonTK1), our install script correctly works around the issue via [methods outlined in this post](https://devtalk.nvidia.com/default/topic/835118/embedded-systems/incorrect-configuration-in-opencv4tegra-debian-packages-and-solution).
 
 1. Flash your Jetson with the latest L4T using [Jetpack](https://developer.nvidia.com/embedded/jetson-development-pack-archive);
-
 2. Install the [Grinch kernel](https://devtalk.nvidia.com/default/topic/766303/embedded-systems/-customkernel-the-grinch-19-3-8-for-jetson-tk1-developed/) for your version of L4T; then
-
 3. Get the installation script and run it *without* root:
 
 ```bash
@@ -33,14 +29,11 @@ Note: you will be prompted for your password right away even though it's without
 #### Connect the Jetson to the Pixhawk via serial/UART connection
 
 1. Connect the Jetson's UART ports to an added voltage converter (1.8 V to 5V);
-
 2. Connect the voltage converter to the Pixhawk;
-
 3. Make sure that the serial connection is established by checking `/dev/ttyTHS0`;
-
 4. Validate the Jetson to Pixhawk communication using maximum baud rate (921600).
 
-See [this diagram](https://drive.google.com/open?id=0BxXn6LyBxnG6b01mc1N5X2diVlU) for pinout details
+See [this diagram](https://drive.google.com/open?id=0BxXn6LyBxnG6b01mc1N5X2diVlU) for pinout details.
 
 #### Running the launch file
 
@@ -60,7 +53,7 @@ It means you've succeeded. Note the baud rate is set to `921600` because that's 
 
 ### On Ubuntu 14.04 desktop (for simulator)
 
-To run the simulator, clone a copy of the ardupilot project from [Ardupilot](https://github.com/diydrones/ardupilot). Follow the directions at [Ardupilot SITL](http://dev.ardupilot.com/wiki/sitl-simulator-software-in-the-loop) to set up the simulator. There is also a script, `initalization/apm_sim` that will do this set-up automatically. 
+To run the simulator, clone a copy of the ardupilot project from ArduPilot. Follow the directions at [ArduPilot SITL](http://dev.ardupilot.com/wiki/sitl-simulator-software-in-the-loop) to set up the simulator. There is also a script, `initalization/apm_sim` that will do this set-up automatically. 
 
 This script is meant to be ran from a fresh Ubuntu 14.04 installation. Please proceed with caution if you plan on installing on a system with ROS already installed.
 
