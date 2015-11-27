@@ -117,13 +117,13 @@ land()
 
 Your script can be launched as a normal python scripts, but `spiri_go`, and `mavros` packages must be running in the background for it to control a quadcopter.
 
-## Generating Documentation
+## Generating documentation
 
 TODO
 
 ## Develpers
 
-### Running Tests
+### Running tests
 
 To test the python API, run:
 
