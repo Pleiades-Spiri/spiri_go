@@ -142,7 +142,7 @@ sudo apt-get update
 sudo apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
 # then UNINSTALL OpenCV4Tegra to fix the debian files
-sudo apt-get remove --force-yes libopencv4tegra libopencv4tegra-dev libopencv4tegra-python 
+sudo apt-get remove $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python 
 sudo dpkg --purge libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
 # source the prepared debian files to reinstall OpenCV4Tegra properly
