@@ -70,6 +70,7 @@ APTITUDE_OPTIONS="-y"
 export DEBIAN_FRONTEND=noninteractive
 export GIT_SSL_NO_VERIFY=1
 export CUDA_VERSION="cuda-repo-l4t-r21.3-6-5-prod_6.5-42_armhf"
+export OPENCV4TEGRA_VERSION="libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf"
 
 # do a hold here to prevent OpenGL from being overwritten
 sudo apt-mark hold xserver-xorg-core
@@ -91,18 +92,19 @@ sudo apt-get install $APTITUDE_OPTIONS dpkg git bash-completion command-not-foun
 # Install CUDA 6.5
 ###############################################################################
 # source: JetsonHacks
+
+# check to see if CUDA 6.5 has already been installed
 if (($(dpkg -l | grep cuda-toolkit-6-5 | wc -l) == 0))
 then
-    echo "Installing CUDA 6.5"
+    
+    # check to see if the correct deb file has already been downloaded
     if [ -f $DATA/$CUDA_VERSION".deb" ]
     then
         CSUM="7652f8afcd01e5c82dc5c202a902469a"
         MD5=$(md5sum $DATA/$CUDA_VERSION".deb" | cut -d ' ' -f 1)
-        #echo $CSUM
-        #echo $MD5
         if [ "$MD5" != "$CSUM" ]
         then
-        #   rm $CUDA_VERSION".deb"
+            sudo rm -f $CUDA_VERSION".deb"
             printf ${YELLOW}"Found invalid file "$CUDA_VERSION".deb. Program will attempt to download it again.\N"${NO_COLOR}
             wget http://developer.download.nvidia.com/embedded/L4T/r21_Release_v3.0/$CUDA_VERSION".deb" -P $DATA
         else
@@ -112,15 +114,16 @@ then
         wget http://developer.download.nvidia.com/embedded/L4T/r21_Release_v3.0/$CUDA_VERSION".deb" -P $DATA
     fi
 
+    # download & install the actual CUDA Toolkit including the OpenGL toolkit from NVIDIA. 
+    echo "Installing CUDA 6.5"
     sudo dpkg -i $DATA/$CUDA_VERSION".deb"
-    # Download & install the actual CUDA Toolkit including the OpenGL toolkit from NVIDIA. 
     sudo apt-get update
     sudo apt-get install $APTITUDE_OPTIONS cuda-toolkit-6-5
 
-    # Add yourself to the "video" group to allow access to the GPU
+    # add yourself to the "video" group to allow access to the GPU
     sudo usermod -a -G video $SPIRI_USER
-    #Add the 32-bit CUDA paths to your .bashrc login script, and start using it in your current console:
 
+    # add the 32-bit CUDA paths to your .bashrc login script, and start using it in your current console:
     echo "# Add CUDA bin & library paths:" >> $SPIRI_HOME/.bashrc
     echo "export PATH=/usr/local/cuda-6.5/bin:$PATH" >> $SPIRI_HOME/.bashrc
     echo "export LD_LIBRARY_PATH=/usr/local/cuda-6.5/lib:$LD_LIBRARY_PATH" >> $SPIRI_HOME/.bashrc
@@ -135,13 +138,39 @@ fi
 ###############################################################################
 # https://devtalk.nvidia.com/default/topic/835118/embedded-systems/incorrect-configuration-in-opencv4tegra-debian-packages-and-solution
 
-# do the official OpenCV4Tegra installation
-wget http://developer.download.nvidia.com/embedded/OpenCV/L4T_21.2/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb -P $DATA
-sudo dpkg -i $DATA/libopencv4tegra-repo_l4t-r21_2.4.10.1_armhf.deb
-sudo apt-get update
-sudo apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
+# check to see if OpenCV4Tegra 2.4.10.1 has already been installed
+# if not, install it
+# if so, unhold it
+if (($(dpkg -l | grep libopencv4tegra | wc -l) == 0))
+then 
+    # check to see if the correct deb file has already been downloaded
+    if [ -f $DATA/$OPENCV4TEGRA_VERSION".deb" ]
+    then
+        CSUM="830eb30bbf6d5dbaa43358f14fc6139b"
+        MD5=$(md5sum $DATA/$OPENCV4TEGRA_VERSION".deb" | cut -d ' ' -f 1)
+        if [ "$MD5" != "$CSUM" ]
+        then
+            sudo rm -f $OPENCV4TEGRA_VERSION".deb"
+            printf ${YELLOW}"Found invalid file "$OPENCV4TEGRA_VERSION".deb. Program will attempt to download it again.\N"${NO_COLOR}
+            wget http://developer.download.nvidia.com/embedded/OpenCV/L4T_21.2/$OPENCV4TEGRA_VERSION".deb" -P $DATA
+        else
+            printf ${GREEN}"Found valid file "$OPENCV4TEGRA_VERSION".deb\n"${NO_COLOR}
+        fi
+    else
+        wget http://developer.download.nvidia.com/embedded/OpenCV/L4T_21.2/$OPENCV4TEGRA_VERSION".deb" -P $DATA
+    fi
 
-# then UNINSTALL OpenCV4Tegra to fix the debian files
+    # do the official OpenCV4Tegra installation since it's not yet installed
+    sudo dpkg -i $DATA/$OPENCV4TEGRA_VERSION".deb"
+    sudo apt-get update
+    sudo apt-get install $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
+
+else 
+    # do this to be safe
+    sudo apt-mark unhold libopencv4tegra libopencv4tegra-dev libopencv4tegra-python libopencv4tegra-repo
+fi 
+
+# either way, then UNINSTALL OpenCV4Tegra to fix the debian files
 sudo apt-get remove $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libopencv4tegra-python 
 sudo dpkg --purge libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
@@ -173,7 +202,7 @@ printf ${GREEN}"OpenCV4Tegra installed and debian files fixed \n"${NO_COLOR}
 # add the ROS repository for Trusty(14.04):
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
 
-# det the official ROS key
+# get the official ROS key
 wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add -
 
 # and install the packages we recommend for having a development environment good for MAVs. 
