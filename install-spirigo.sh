@@ -214,12 +214,12 @@ sudo apt-get install $APTITUDE_OPTIONS \
                     ros-indigo-mavros \
                     ros-indigo-tf
 
-# Setup rosdep which makes life a lot easier by auto-installing dependencies wherever possible.
+# setup rosdep which makes life a lot easier by auto-installing dependencies wherever possible.
 sudo apt-get install $APTITUDE_OPTIONS python-rosdep
 sudo rosdep init
 rosdep update
 
-# Gotta source the ROS binary path
+# gotta source the ROS binary path
 echo "source /opt/ros/indigo/setup.bash" >> $SPIRI_HOME/.bashrc
 source /opt/ros/indigo/setup.bash
 
@@ -228,22 +228,22 @@ source /opt/ros/indigo/setup.bash
 ###############################################################################
 SPIRI_WORKSPACE=$SPIRI_HOME/spiri_ws
 
-# Make workspace directory then "compile" to initialize the ROS workspace
+# make workspace directory then "compile" to initialize the ROS workspace
 mkdir -p $SPIRI_WORKSPACE/src
 cd $SPIRI_WORKSPACE/src
 catkin_init_workspace
 cd $SPIRI_WORKSPACE
 catkin_make 
 
-# Download spiri_go package into source 
+# download spiri_go package into source 
 cd $SPIRI_WORKSPACE/src
 git clone https://github.com/Pleiades-Spiri/spiri_go.git
 
-# Now compile the one package we have
+# now compile the one package we have
 cd $SPIRI_WORKSPACE
 catkin_make
 
-# Gotta source the package paths for roslaunch/rosrun to find them
+# gotta source the package paths for roslaunch/rosrun to find them
 sh -c "echo 'source $SPIRI_WORKSPACE/devel/setup.bash' >> $SPIRI_HOME/.bashrc"
 source $SPIRI_WORKSPACE/devel/setup.bash
 
