@@ -223,6 +223,8 @@ rosdep update
 echo "source /opt/ros/indigo/setup.bash" >> $SPIRI_HOME/.bashrc
 source /opt/ros/indigo/setup.bash
 
+printf ${GREEN}"ROS and basic packages successfully installed \n"${NO_COLOR}
+
 ###############################################################################
 # Install SpiriGo repository
 ###############################################################################
@@ -247,6 +249,8 @@ catkin_make
 sh -c "echo 'source $SPIRI_WORKSPACE/devel/setup.bash' >> $SPIRI_HOME/.bashrc"
 source $SPIRI_WORKSPACE/devel/setup.bash
 
+printf ${GREEN}"SpiriGo package installed and compiled successfully \n"${NO_COLOR}
+
 ###############################################################################
 # All done!
 ###############################################################################
@@ -254,13 +258,13 @@ cd $SPIRI_HOME
 
 cat <<CONCLUSION
 
-Congratulations! SpiriGo is now installed on your Jetson TK1
+Congratulations! SpiriGo is now installed on your Jetson TK1.
 
 Please refer to the readme online for more instructions:
     
     https://github.com/Pleiades-Spiri/spiri_go
 
-If everything compiled fine, you should be able to run
+If everything compiled fine, you should be able to run:
 
     roslaunch spiri_go jetson.launch
 
