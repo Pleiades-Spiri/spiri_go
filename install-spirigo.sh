@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###############################################################################
-# SpiriGo dev envrionment installer for nVidia Jetson TK1 
+# SpiriGo dev environment installer for nVidia Jetson TK1 
 # --------------------------------
 # This script installs a SpiriGo system on a Jetson computer meant to be a
 # companion computer on a flying ArduPilot quadcopter. DO NOT run this on
@@ -175,6 +175,8 @@ sudo apt-get remove $APTITUDE_OPTIONS libopencv4tegra libopencv4tegra-dev libope
 sudo dpkg --purge libopencv4tegra libopencv4tegra-dev libopencv4tegra-python
 
 # download modded debian files from GitHub 
+# this may look very suspicious but it's nothing more than pacakged deb files made as per instructions 
+# from https://devtalk.nvidia.com/default/topic/835118/embedded-systems/incorrect-configuration-in-opencv4tegra-debian-packages-and-solution
 # TODO: script this step
 wget https://raw.githubusercontent.com/Pleiades-Spiri/opencv4tegra-mod-deb-files/master/libopencv4tegra_2.4.10.1_armhf_mod.deb -P $DATA
 wget https://raw.githubusercontent.com/Pleiades-Spiri/opencv4tegra-mod-deb-files/master/libopencv4tegra-dev_2.4.10.1_armhf_mod.deb -P $DATA
