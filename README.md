@@ -12,7 +12,7 @@ SpiriGo is primarily being developed for use on the [Jetson TK1](http://www.nvid
 - [CUDA 6.5](https://developer.nvidia.com/cuda-toolkit-65), and
 - [OpenCV4Tegra](http://elinux.org/Jetson/Computer_Vision_Performance#Hardware_Acceleration_of_OpenCV).
 
-Although it is [generally recognized that ROS is incompatible with OpenCV4Tegra](http://wiki.ros.org/NvidiaJetsonTK1), our install script correctly works around the issue via [methods outlined in this post](https://devtalk.nvidia.com/default/topic/835118/embedded-systems/incorrect-configuration-in-opencv4tegra-debian-packages-and-solution).
+Although it is [generally recognized that ROS is incompatible with OpenCV4Tegra](http://wiki.ros.org/NvidiaJetsonTK1), our install script correctly works around the issue via [methods outlined in this post](https://devtalk.nvidia.com/default/topic/835118/embedded-systems/incorrect-configuration-in-opencv4tegra-debian-packages-and-solution). To install:
 
 1. Flash your Jetson with the latest L4T using [Jetpack](https://developer.nvidia.com/embedded/jetson-development-pack-archive);
 2. Install the [Grinch kernel](https://devtalk.nvidia.com/default/topic/766303/embedded-systems/-customkernel-the-grinch-19-3-8-for-jetson-tk1-developed/) for your version of L4T; then
@@ -67,14 +67,14 @@ $ ./apm_sim
 
 Start the simulator with:
 
-```
-sim_vehicle.sh --map --console --aircraft test
+```bash
+$ sim_vehicle.sh --map --console --aircraft test
 ```
 
 Next launch the sitl node for spiri:
 
-```
-roslaunch spiri_go sitl.launch
+```bash
+$ roslaunch spiri_go sitl.launch
 ```
 
 Note: if you're running this the first time, you may need to disable RC calibration pre-arm check via the `mavproxy` console.
