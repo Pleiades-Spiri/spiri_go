@@ -8,7 +8,7 @@ SpiriGo is currently in very early stages of development. We have some features 
 - SLAM
 - Depth mapping
 
-But for now it provides some baseic convenience methods for `mavros` use.
+But for now it provides some basic convenience methods for `mavros` use.
 
 ## Installation and Usage
 
