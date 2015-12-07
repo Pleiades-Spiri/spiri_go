@@ -26,11 +26,6 @@
 #include <spiri_go/LocalPosition.h>
 #include <spiri_go/LandHereAction.h>
 #include <spiri_go/LastState.h>
-/*#include "um_pixhawk/filter_state.h"
-#include "std_msgs/String.h"
-#include <dynamic_reconfigure/server.h>
-#include "um_pixhawk/StateestimationParamsConfig.h"
-#include <ar_track_alvar_msgs/AlvarMarkers.h>*/
 #include <string>
 
 using namespace std;
