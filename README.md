@@ -2,6 +2,14 @@
 
 SpiriGo is a ROS package for performing autonomous flights with a MAVLink UAV. It is built upon [`mavros`](http://wiki.ros.org/mavros) and [ArduPilot](https://github.com/diydrones/ardupilot).
 
+SpiriGo is currently in very early stages of development. We have some features planned for later:
+
+- Trajectory planning for goals
+- SLAM
+- Depth mapping
+
+But for now it provides some basic convenience methods for `mavros` use.
+
 ## Installation and Usage
 
 ### On the Jetson TK1
