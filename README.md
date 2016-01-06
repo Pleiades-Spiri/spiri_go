@@ -4,9 +4,9 @@ SpiriGo is a ROS package for performing autonomous flights with a MAVLink UAV. I
 
 SpiriGo is currently in very early stages of development. We have some features planned for later:
 
-- Trajectory planning for goals
-- SLAM
-- Depth mapping
+- Setpoints
+- Trajectory planning 
+- Motion premitives
 
 But for now it provides some basic convenience methods for `mavros` use.
 
