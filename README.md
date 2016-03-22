@@ -43,10 +43,10 @@ Note: you will be prompted for your password right away even though it's without
 
 | TK1           | TXB0104     | Pixhawk |
 | ------------- | ----------- | ------- |
-| 1.8V: P37     | VCCA - VCCB | 5V: P1  |
-| GND: P38      | GND - GND   | GND: P6 |
-| TXd1: P41     | A1 - B1     | TX1: P2 |
-| RXd1: P44     | A2 - B2     | RX1: P3 |
+| 1.8V: P37     | VCCA - VCCB | 5V:  P1 |
+| GND:  P38     | GND  - GND  | GND: P6 |
+| RXd1: P44     | A1   - B1   | TX1: P2 |
+| TXd1: P41     | A2   - B2   | RX1: P3 |
 
 See [this diagram](https://drive.google.com/open?id=0BxXn6LyBxnG6b01mc1N5X2diVlU) for pinout details.
 
