@@ -147,7 +147,9 @@ $ python test/api.py
 To test those parts that require the simulator running, use:
 
 ```bash
-$ python test/sim.py
+$ roscore                                             # run in one terminal
+$ sim_vehicle.sh --map --console --aircraft test      # run in a second terminal
+$ python test/sim.py                                  # run in a third terminal
 ```
 
 Any new methods that are made MUST have a corresponding unit test, and if possible should have a corresponding unit test with the simulator. It is good practice to write the test before implementing the method.
