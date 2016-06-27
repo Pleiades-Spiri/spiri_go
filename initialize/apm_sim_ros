@@ -19,25 +19,42 @@ sudo apt-get -y install python-matplotlib python-serial python-wxgtk2.8 python-l
 sudo apt-get -y install python-scipy python-opencv ccache gawk git python-pip python-pexpect
 sudo pip install pymavlink MAVProxy
 
-
 ###############################################################################
 ## ROS Installation 
 ## Taken from https://pixhawk.org/dev/ros/installation
 ###############################################################################
 
-# Install the packages we recommend for having a development environment good for MAVs. 
+# Add the ROS repository for Trusty(14.04):
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+
+# Get the official ROS key
+wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add -
+
+# And install the packages we recommend for having a development environment good for MAVs. 
 # You can install any other project-specific dependencies via rosdep or manually.
-sudo apt-get install -y ros-indigo-mavlink \
+sudo apt-get update
+sudo apt-get install -y ros-indigo-ros-base \
+                        ros-indigo-usb-cam \
+                        ros-indigo-mavlink \
                         ros-indigo-mavros \
                         ros-indigo-cv-bridge \
                         ros-indigo-image-proc \
                         ros-indigo-tf
 
+# Setup rosdep which makes life a lot easier by auto-installing dependencies wherever possible.
+sudo apt-get install -y python-rosdep
+sudo rosdep init
+rosdep update
+
+# Gotta source the ROS binary path
+echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
+source /opt/ros/indigo/setup.bash
+
 ###############################################################################
 ## Set up minimal workspace for spiri_go
 ## On desktop we want just ONE package in the workspace to minimize compilation issues 
 ###############################################################################
-WORKSPACE=$HOME/spiri_ws
+WORKSPACE=~/spiri_ws
 
 # Make workspace directory then "compile" to initialize the ROS workspace
 mkdir -p $WORKSPACE/src
@@ -71,7 +88,6 @@ source $WORKSPACE/devel/setup.bash
 
 # In a different terminal run this to start spiri_go and mavros:
 # roslaunch spiri_go sitl.launch
-
 
 cd $HOME
 git clone git://github.com/ArduPilot/ardupilot.git --depth=1
