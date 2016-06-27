@@ -49,6 +49,8 @@ catkin_make
 # Download spiri_go package into source 
 cd $WORKSPACE/src
 git clone https://github.com/Pleiades-Spiri/spiri_go.git
+cd spiri_go
+sudo python setup.py install
 
 # Now compile the one package we have
 cd $WORKSPACE
