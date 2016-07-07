@@ -7,6 +7,12 @@ sudo apt-get update
 sudo apt-get install -y git screen
 
 ###############################################################################
+## Remove ModemManager as it conflicts with APM and Pixhawk
+###############################################################################
+
+sudo apt-get remove modemmanager
+
+###############################################################################
 ## Ardupilot and simulator installation
 ## Taken from http://dev.ardupilot.com/wiki/setting-up-sitl-on-linux/
 ###############################################################################
