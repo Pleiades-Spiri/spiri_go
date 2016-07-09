@@ -39,6 +39,13 @@ sudo apt-get install -y ros-indigo-mavlink \
                         ros-indigo-image-proc \
                         ros-indigo-tf
 
+# Create log files and set permissions
+sudo touch /var/log/mav.tlog
+sudo chown $USER /var/log/mav.tlog
+
+sudo touch /var/log/mav.tlog.raw
+sudo chown $USER /var/log/mav.tlog.raw
+
 ###############################################################################
 ## Set up minimal workspace for spiri_go
 ## On desktop we want just ONE package in the workspace to minimize compilation issues 
